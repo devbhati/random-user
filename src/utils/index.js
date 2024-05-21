@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const NEW_RELIC_LICENSE_KEY = '676813d717fa65c097b8a39553ee3ecde2f8NRAL';
+const QUERY_KEY = 'new-relic-react';
+
 export async function sendDataToNewRelic(user) {
     if(!user) return;
-    const NEW_RELIC_LICENSE_KEY = 'API-KEY';
     const CURRENT_TIME = Math.floor(Date.now() / 1000);
     const url = 'https://metric-api.newrelic.com/metric/v1';
     const headers = {
@@ -13,7 +15,7 @@ export async function sendDataToNewRelic(user) {
         {
             metrics: [
                 {
-                    name: 'memory.heap',
+                    name: QUERY_KEY,
                     type: 'summary',
                     value: user,
                     timestamp: CURRENT_TIME,
@@ -32,12 +34,31 @@ export async function sendDataToNewRelic(user) {
     .catch(error => {
         console.error('Error:', error);
     });
-
 }
 
+export async function queryNewRelic(setFetchSuccess) {
+    const ACCOUNT_ID = '4454608';
+    const URL_ENCODED_QUERY = encodeURIComponent(`SELECT * FROM Metric WHERE metricName=${QUERY_KEY}`);
 
+    const url = `https://insights-api.newrelic.com/v1/accounts/${ACCOUNT_ID}/query?nrql=${URL_ENCODED_QUERY}`;
 
+    const headers = {
+        'Accept': 'application/json',
+        'X-Query-Key': QUERY_KEY
+    };
 
+    axios.get(url, { headers })
+    .then(response => {
+        console.log('Response:', response.data);
+        setFetchSuccess(true);
+        return response;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        setFetchSuccess(false);
+        return error;
+    });
+}
 
 // const {MetricBatch, CountMetric, MetricClient} = require('@newrelic/telemetry-sdk').telemetry.metrics;
 
