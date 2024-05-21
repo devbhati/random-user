@@ -1,22 +1,22 @@
 import {useState} from 'react';
-import './App.css';
 import axios from "axios";
+import './App.css';
+import { sendDataToNewRelic } from './utils';
 
-function App() {
 
+export default function App() {
   const [user, setUser] = useState(null);
 
   async function fetchRandomUser() {
     try {
-      const response = await axios.get('https://randomuser.me/api/');
-      setUser(response.data.results[0]);
-      // sendToNewRelic(user);
+        const response = await axios.get('https://randomuser.me/api/');
+        setUser(response.data.results[0]);
+        sendDataToNewRelic(user);
     } catch (error) {
-      console.error('Error fetching random user:', error);
-      return null;
+        console.error('Error fetching random user:', error);
+        return null;
     }
   }
-
   return (
     <div className="App">
       <header className="App-header">
@@ -38,5 +38,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
