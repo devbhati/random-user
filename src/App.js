@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import axios from "axios";
 import './App.css';
-import { queryNewRelic, sendDataToNewRelic } from './utils';
+import { fetchRandomUser, queryNewRelic, sendDataToNewRelic } from './utils';
 
 
 export default function App() {
@@ -20,15 +20,6 @@ export default function App() {
     queryNewRelic(setFetchSuccess);
   }
 
-  async function fetchRandomUser() {
-    try {
-        const response = await axios.get('https://randomuser.me/api/');
-        setUser(response.data.results[0]);
-    } catch (error) {
-        console.error('Error fetching random user:', error);
-        return null;
-    }
-  }
   return (
     <div className="App">
       <header className="App-header">
@@ -36,7 +27,7 @@ export default function App() {
       </header>
       <br/><br/>
         <div className="button-group">
-          <button className="button-single" onClick={() => fetchRandomUser()} >
+          <button className="button-single" onClick={() => fetchRandomUser(setUser)} >
             Fetch a random user!
           </button>
           <button className="button-single" onClick={() => sendData(true)}>

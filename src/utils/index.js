@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const NEW_RELIC_LICENSE_KEY = '<API-KEY>';
 const QUERY_KEY = 'new-relic-react';
 
 export async function sendDataToNewRelic(user) {
+    const NEW_RELIC_LICENSE_KEY = 'API-KEY';
     if(!user) return;
     const CURRENT_TIME = Math.floor(Date.now() / 1000);
     const url = 'https://metric-api.newrelic.com/metric/v1';
@@ -58,6 +58,16 @@ export async function queryNewRelic(setFetchSuccess) {
         setFetchSuccess(false);
         return error;
     });
+}
+
+export async function fetchRandomUser(setUser) {
+    try {
+        const response = await axios.get('https://randomuser.me/api/');
+        setUser(response.data.results[0]);
+    } catch (error) {
+        console.error('Error fetching random user:', error);
+        return null;
+    }
 }
 
 // const {MetricBatch, CountMetric, MetricClient} = require('@newrelic/telemetry-sdk').telemetry.metrics;
