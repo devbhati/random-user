@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const NEW_RELIC_LICENSE_KEY = '676813d717fa65c097b8a39553ee3ecde2f8NRAL';
+const NEW_RELIC_LICENSE_KEY = '<API-KEY>';
 const QUERY_KEY = 'new-relic-react';
 
 export async function sendDataToNewRelic(user) {
