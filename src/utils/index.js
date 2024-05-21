@@ -2,7 +2,7 @@ import axios from "axios";
 
 export async function sendDataToNewRelic(user) {
     if(!user) return;
-    const NEW_RELIC_LICENSE_KEY = '676813d717fa65c097b8a39553ee3ecde2f8NRAL';
+    const NEW_RELIC_LICENSE_KEY = 'API-KEY';
     const CURRENT_TIME = Math.floor(Date.now() / 1000);
     const url = 'https://metric-api.newrelic.com/metric/v1';
     const headers = {
