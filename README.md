@@ -27,7 +27,7 @@ The status code returned in 202
 
 
 ## Fetch data from new relic!: 
-This makes a GET API call to new relic servers to fetch the metric by passing in the account ID and the metric name/key.
+This makes a GET API call to new relic servers to fetch the metric by passing in the account ID and the metric name/key. This is currently giving 401, still a work in progress!
 
 
 
