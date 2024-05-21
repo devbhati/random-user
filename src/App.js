@@ -1,5 +1,4 @@
 import {useState} from 'react';
-import axios from "axios";
 import './App.css';
 import { fetchRandomUser, queryNewRelic, sendDataToNewRelic } from './utils';
 
