@@ -1,21 +1,20 @@
-import {useState} from 'react';
+import { useState} from 'react';
 import './App.css';
-import { fetchRandomUser, queryNewRelic, sendDataToNewRelic } from './utils';
-
+import { fetchMetrics, queryNewRelic, sendDataToNewRelic } from './utils';
 
 export default function App() {
-  const [user, setUser] = useState(null);
+  const [metrics, setMetrics] = useState(null);
   const [postSuccess, setPostSuccess] = useState(false);
   const [fetchSuccess, setFetchSuccess] = useState(false);
 
   const sendData = () => {
-    if(!user) return;
-    if(sendDataToNewRelic(user)) setPostSuccess(true);
+    if(!metrics) return;
+    if(sendDataToNewRelic(metrics)) setPostSuccess(true);
     else setPostSuccess(false);
   }
 
   const fetchData = () => {
-    if(!user) return;
+    if(!metrics) return;
     queryNewRelic(setFetchSuccess);
   }
 
@@ -26,8 +25,8 @@ export default function App() {
       </header>
       <br/><br/>
         <div className="button-group">
-          <button className="button-single" onClick={() => fetchRandomUser(setUser)} >
-            Fetch a random user!
+          <button className="button-single" onClick={() => fetchMetrics('devbhati', 'random-user', setMetrics)} >
+            Fetch repo metric!
           </button>
           <button className="button-single" onClick={() => sendData(true)}>
             Send this data to new relic!
@@ -37,17 +36,21 @@ export default function App() {
           </button>
         </div>
       <br/><br/>
-      <div className="random-user">
+      <div className="random-metrics">
         {postSuccess && (
           <p>Data successfully sent to new relic!</p>
         )}
         {fetchSuccess && (
           <p>Data fetched successfully from new relic!</p>
         )}
-        {user && (
+        {metrics && (
           <>
-          <img src={user.picture.large} alt="user"/>
-          <p>Name: {user.name.title + ` ` + user.name.first + ` ` + user.name.last}</p>
+          {/* <img src={user.picture.large} alt="user"/> */}
+          <p>Health percentage: {metrics.health_percentage}</p>
+          < br/>
+          <p>Description: {metrics.description}</p>
+          < br/>
+          <p>README URL: {metrics.files.readme.url}</p>
           </>
         )}
       </div>

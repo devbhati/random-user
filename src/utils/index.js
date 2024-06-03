@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const QUERY_KEY = 'new-relic-react';
+const NEW_RELIC_LICENSE_KEY = 'NEW_RELIC_LICENSE_KEY';
 
-export async function sendDataToNewRelic(user) {
-    const NEW_RELIC_LICENSE_KEY = 'API-KEY';
-    if(!user) return;
+export async function sendDataToNewRelic(metric) {
+    if(!metric) return;
     const CURRENT_TIME = Math.floor(Date.now() / 1000);
     const url = 'https://metric-api.newrelic.com/metric/v1';
     const headers = {
@@ -17,7 +17,7 @@ export async function sendDataToNewRelic(user) {
                 {
                     name: QUERY_KEY,
                     type: 'summary',
-                    value: user,
+                    value: metric,
                     timestamp: CURRENT_TIME,
                     attributes: {
                         'host.name': 'dev.server.com'
@@ -37,39 +37,30 @@ export async function sendDataToNewRelic(user) {
 }
 
 export async function queryNewRelic(setFetchSuccess) {
-    const ACCOUNT_ID = '4454608';
-    const URL_ENCODED_QUERY = encodeURIComponent(`SELECT * FROM Metric WHERE metricName=${QUERY_KEY}`);
-
-    const url = `https://insights-api.newrelic.com/v1/accounts/${ACCOUNT_ID}/query?nrql=${URL_ENCODED_QUERY}`;
-
-    const headers = {
-        'Accept': 'application/json',
-        'X-Query-Key': QUERY_KEY
-    };
-
-    axios.get(url, { headers })
-    .then(response => {
-        console.log('Response:', response.data);
-        setFetchSuccess(true);
-        return response;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        setFetchSuccess(false);
-        return error;
-    });
-}
-
-export async function fetchRandomUser(setUser) {
     try {
-        const response = await axios.get('https://randomuser.me/api/');
-        setUser(response.data.results[0]);
+        const response = await axios.post('http://localhost:4999/proxy/graphql', {
+          query: '{ requestContext { userId apiKey } }'
+        });
+        console.log(response.data);
+        setFetchSuccess(true);
     } catch (error) {
-        console.error('Error fetching random user:', error);
-        return null;
+        console.error('Error fetching data:', error);
+        setFetchSuccess(false);
     }
 }
 
+export async function fetchMetrics(user, repo, setter) {
+    try {
+        // const response = await axios.get('https://randomuser.me/api/');
+        const response = await axios.get(`https://api.github.com/repos/${user}/${repo}/community/profile`);
+        console.log(response.data);
+        setter(response.data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return null;
+    }
+}
+// DID NOT WORK! ####### webpack issue!!!!
 // const {MetricBatch, CountMetric, MetricClient} = require('@newrelic/telemetry-sdk').telemetry.metrics;
 
 // const API_KEY = 'NRBR-27e5bca8273c03c593c';

@@ -19,7 +19,7 @@
   pointer-events: none;
 }
 
-.random-user {
+.random-metrics {
   display: flex;
   flex-direction: column;
   align-items: center;
